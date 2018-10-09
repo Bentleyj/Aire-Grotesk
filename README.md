@@ -4,6 +4,17 @@ This is a project in association with [Studio Atypical](http://studioatypical.co
 
 Inspired by [Axis Praxis](https://www.axis-praxis.org/specimens/__DEFAULT__)
 
+### File Structure
+
+This project is a set of experiments around interactive variable fonts in the browser. The below is a list of projects:
+
+1. LightTest - Change colors of font based on ambient light (Status: Untested).
+2. Mavo - Mavo font ported from Axis Praxis, different variables controlled by various sliders (Status: Not Working).
+3. MicVolume - Vary text weight on audio input from app (Status: Working).
+4. PitchDetect - Vary text parameters based on pitch (Status: Working but looks ugly).
+5. VolumeExplode - Make font explode via input volume, same as Mic Volume but controlling different parameters of a different font (Status: Working).
+6. WebMidi - Make font change on Midi input from a midi controller (Status: Untested).
+
 ### Useful Links
 
   * https://www.bbc.co.uk/rd/blog/2018-08-variable-fonts-open-type
