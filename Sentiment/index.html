@@ -46,18 +46,25 @@
 		  margin: 0;
 		}
 		</style>
+		<script src="/jquery-3.3.1.min.js"></script>
 	</head>
 	<body>
 		<input id="source" />
 		<p id="result">EXPLODE!</p>
+		<p id="sentiment">Test</p>
 		<span id="value"><span>
 		<script>
 
 			const $source = document.querySelector('#source');
 			const $result = document.querySelector('#result');
+			const $sentiment = document.querySelector('#sentiment');
 
 			const typeHandler = function(e) {
 				$result.innerHTML = e.target.value;
+				console.log("posting!");
+				$.post("localhost:8080/submit", e.target.value, function(result) {
+					sentiment.innerHTML = result;
+				});
 			}
 
 			$source.addEventListener('input', typeHandler);
