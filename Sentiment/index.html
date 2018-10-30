@@ -1,0 +1,106 @@
+<html>
+	<head>
+		<title>Volume Explode</title>
+		<style>
+		body {
+		  background-color: white;
+		  color: black;
+		  margin: 0;
+		  padding: 1em;
+		  text-align: center;
+		}
+
+		#value {
+		  color: black;
+		  font-size: 60px;
+		}
+
+		#meter {
+		  margin-top:60px;
+		}
+
+
+		button {
+		  color: black;
+		  padding: 4px 16px;
+		}
+
+		.p {
+		  padding: 0;
+		  text-align: center;
+		}
+
+		@font-face {
+		  font-family:'Decovar Alpha Regular24';      
+		  src:url('https://www.axis-praxis.org/fonts/webfonts/DecovarAlpha-VF.woff2');
+		  font-variation-settings: "BLDA" 0, "TRMD" 0, "TRMC" 0, "SKLD" 0, "TRML" 0, "SKLA" 0, "TRMF" 0, "TRMK" 0, "BLDB" 0, "WMX2" 0, "TRMB" 0, "TRMA" 0, "SKLB" 0, "TRMG" 0, "TRME" 0;
+		}
+
+
+		#para1 {
+		  font-size:200px;
+		  color: black;
+		  font-family: "Decovar Alpha Regular24";
+		  font-variation-settings: "SKLD" 0, "SKLA" 0;
+		  font-stretch: 500%;
+		  margin: 0;
+		}
+		</style>
+	</head>
+	<body>
+		<canvas id="meter" width="900" height="150"></canvas>
+		<p id="para1">EXPLODE!</p>
+		<span id="value"><span>
+		<script>
+			var text = document.getElementById("para1");
+			var value = document.getElementById("value");
+
+			var audioContext = null;
+			var meter = null;
+			var canvasContext = null;
+			var WIDTH=900;
+			var HEIGHT=150;
+			var rafID = null;
+
+			window.onload = function() {
+
+			    // grab our canvas
+				canvasContext = document.getElementById( "meter" ).getContext("2d");
+			}
+
+			// function onLevelChange( time ) {
+			//     // clear the background
+
+			//     // check if we're currently clipping
+			//     if (meter.checkClipping())
+			//         canvasContext.fillStyle = "red";
+			//     else
+			//         canvasContext.fillStyle = "green";
+
+			 
+
+			//     // draw a bar based on the current volume
+			  
+			//  if (meter.volume > 0) {    
+			//     var newVol = 0 + meter.volume * 500;
+			//     var volLength = meter.volume * 900 * 3;
+			//      //var volSize = 150 + meter.volume * 300;
+			//     console.log(volLength);
+			//     var skld = newVol * 10;
+			//    	var skla = newVol * 10;
+			//    	var wmx2 = newVol * 10;
+			//    	var settings = "font-variation-settings: 'SKLD' " + skld + ", 'BLDB' " + skla + ", 'WMX2' " + wmx2 + ";" ;
+			// 	text.setAttribute("style", ('font-variation-settings', settings));
+			//     //text.style.fontSize = volSize + "px";
+			//    value.innerHTML = Math.round((0 + meter.volume * 100)) + "%";
+			    
+			//     canvasContext.fillRect(0, 0, volLength, HEIGHT);
+			//  }   
+
+			//     // set up the next visual callback
+			//     rafID = window.requestAnimationFrame( onLevelChange );
+			// }
+
+		</script>
+	</body>
+</html>

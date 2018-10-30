@@ -1,14 +1,18 @@
-var http = require('http');
 var analyze = require('Sentimental').analyze;
 
-var server = http.createServer(function (request, response) {
-	response.writeHead(200, {"Content-Type": "text/plain"});
-	response.end("Hello World\n");
+var express = require("express");
+var app 	= express();
+var path	= require("path");
+
+app.get('/', function(req, res) {
+	res.sendFile(path.join(__dirname+'/index.html'));
 });
 
-server.listen(8080);
+app.get('/submit', function(req, res) {
+	console.log("Submitted: " + req);
+});
 
-console.log("Server running at localhost:8080");
+app.listen(8080);
 
 var a = analyze("Hey you worthless scumbag"); //Score: -6, Comparative:-1.5
 
