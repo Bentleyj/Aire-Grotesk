@@ -62,7 +62,7 @@
 			const typeHandler = function(e) {
 				$result.innerHTML = e.target.value;
 				console.log("posting!");
-				$.post("localhost:8080/submit", e.target.value, function(result) {
+				$.post("http://localhost:8080/submit", e.target.value, function(result) {
 					sentiment.innerHTML = result;
 				});
 			}
