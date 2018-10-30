@@ -14,7 +14,8 @@ app.use(express.static('libs')); // This serves everything in the libs file as s
 app.use(myParser.urlencoded({extended : true}));
 
 app.post('/submit', function(req, res) {
-	console.log("Submitted: \n" + req.body);
+	var a = req.body;
+	console.log(a);
 });
 
 

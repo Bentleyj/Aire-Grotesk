@@ -61,14 +61,14 @@
 
 			const typeHandler = function(e) {
 				$result.innerHTML = e.target.value;
-				console.log("posting!");
+				console.log(e);
 				$.post("http://localhost:8080/submit", e.target.value, function(result) {
 					sentiment.innerHTML = result;
 				});
 			}
 
 			$source.addEventListener('input', typeHandler);
-			$source.addEventListener('propertychance', typeHandler);
+			$source.addEventListener('propertychange', typeHandler);
 			$source.addEventListener('change', typeHandler);
 		</script>
 	</body>
