@@ -16,7 +16,7 @@ This project is a set of experiments around interactive variable fonts in the br
 4. PitchDetect - Vary text parameters based on pitch (Status: Working but looks ugly).
 5. VolumeExplode - Make font explode via input volume, same as Mic Volume but controlling different parameters of a different font (Status: Working).
 6. WebMidi - Make font change on Midi input from a midi controller (Status: Untested).
-7. Sentiment - Uses a Node.js server to analyze the sentiment of the text input and modifying the font accordingly. using npm plugin [sentimental](https://github.com/thinkroth/Sentimental)
+7. Sentiment - Uses a Node.js server to analyze the sentiment of the text input and modifying the font accordingly. using npm plugin [Sentimental](https://github.com/thinkroth/Sentimental)
 
 ### Useful Links
 
