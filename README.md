@@ -4,6 +4,8 @@ This is a project in association with [Studio Atypical](http://studioatypical.co
 
 Inspired by [Axis Praxis](https://www.axis-praxis.org/specimens/__DEFAULT__)
 
+to run download the app and run the command `npm install` then to view our project go to the lcoal server: 
+
 ### File Structure
 
 This project is a set of experiments around interactive variable fonts in the browser. The below is a list of projects:
@@ -20,3 +22,6 @@ This project is a set of experiments around interactive variable fonts in the br
   * https://www.bbc.co.uk/rd/blog/2018-08-variable-fonts-open-type
   * https://twitter.com/Aetherpoint/status/985879964212920320
   * https://medium.com/@aetherpoint/reading-distance-and-variable-fonts-1f6e1ffd1879
+  * https://github.com/thinkroth/Sentimental
+  * https://github.com/soops/sentimood
+  * https://pdfs.semanticscholar.org/5057/0b1ae743d853fb035a1b4863579f349a2591.pdf
