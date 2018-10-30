@@ -4,7 +4,7 @@ This is a project in association with [Studio Atypical](http://studioatypical.co
 
 Inspired by [Axis Praxis](https://www.axis-praxis.org/specimens/__DEFAULT__)
 
-to run download the app and run the command `npm install` then to view our project go to the lcoal server: 
+to run download the app and run the command `npm install` then to view our project go to the lcoal server: 8080
 
 ### File Structure
 
