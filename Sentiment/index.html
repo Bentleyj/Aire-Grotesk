@@ -19,7 +19,6 @@
 		  margin-top:60px;
 		}
 
-
 		button {
 		  color: black;
 		  padding: 4px 16px;
@@ -33,12 +32,11 @@
 		@font-face {
 		  font-family:'Decovar Alpha Regular24';      
 		  src:url('https://www.axis-praxis.org/fonts/webfonts/DecovarAlpha-VF.woff2');
-		  font-variation-settings: "BLDA" 0, "TRMD" 0, "TRMC" 0, "SKLD" 0, "TRML" 0, "SKLA" 0, "TRMF" 0, "TRMK" 0, "BLDB" 0, "WMX2" 0, "TRMB" 0, "TRMA" 0, "SKLB" 0, "TRMG" 0, "TRME" 1000;
+		  font-variation-settings: "BLDA" 0, "TRMD" 0, "TRMC" 0, "SKLD" 0, "TRML" 0, "SKLA" 0, "TRMF" 0, "TRMK" 0, "BLDB" 0, "WMX2" 0, "TRMB" 0, "TRMA" 0, "SKLB" 0, "TRMG" 0, "TRME" 0;
 		}
 
-
 		#result {
-		  font-size:200px;
+		  font-size:100px;
 		  color: black;
 		  font-family: "Decovar Alpha Regular24";
 		  font-variation-settings: "SKLD" 0, "SKLA" 0;
@@ -50,11 +48,19 @@
 	</head>
 	<body>
 		<input id="source" />
-		<button id="submit" type="button">Analyze</button>
-		<p id="result">EXPLODE!</p>
 		<p id="sentiment">Test</p>
-		<span id="value"><span>
+		<p id="result">EXPLODE!</p>
 		<script>
+
+			const $source = document.querySelector('#source');
+			const $result = document.querySelector('#result');
+			const $sentiment = document.querySelector('#sentiment');
+
+			var goodness = 0;
+			var badness = 0;
+
+			var goodnessTar = 0;
+			var badnessTar = 0;
 
 			function map(val, min1, max1, min2, max2) {
 				var v = val - min1;
@@ -64,10 +70,9 @@
 				return v;
 			}
 
-			const $source = document.querySelector('#source');
-			const $result = document.querySelector('#result');
-			const $sentiment = document.querySelector('#sentiment');
-			const $button = document.querySelector('#submit');
+			function lerp(a, b, v) {
+				return a + v * (b - a);
+			}
 
 			const typeHandler = function(e) {
 				$result.innerHTML = e.target.value;
@@ -80,19 +85,24 @@
 				$.post("http://localhost:8080/submit", t, function(res) {
 					sentiment.innerHTML = res;
 					var v = res;
-					var skld = map(v, 0, 4, 0, 200); // attribute for happiness
-					var skla = map(v, 0, -4, 0, 200); // attribute for sadness
-			   		var settings = "font-variation-settings: 'SKLD' " + skld + ", 'BLDB' " + skla + ";" ;
-					result.setAttribute("style", ('font-variation-settings', settings));
-
+					goodnessTar = map(v, 0, 4, 0, 1000); // attribute for happiness
+					badnessTar = map(v, 0, -4, 0, 1000); // attribute for sadness
 				});
 			}
+
+			function update(timestamp) {
+				goodness = lerp(goodness, goodnessTar, 0.1);
+				badness = lerp(badness, badnessTar, 0.1);
+				window.requestAnimationFrame(update);
+				var settings = "font-variation-settings: 'TRMC' " + goodness + ", 'BLDB' " + badness + ";" ;
+				result.setAttribute("style", ('font-variation-settings', settings));
+			}
+
+			window.requestAnimationFrame(update);
 
 			$source.addEventListener('input', typeHandler);
 			$source.addEventListener('propertychange', typeHandler);
 			$source.addEventListener('change', typeHandler);
-			$button.addEventListener('click', findSentiment);
-
 
 		</script>
 	</body>
