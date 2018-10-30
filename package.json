@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Bentleyj/Aire-Grotesk#readme",
   "dependencies": {
-    "Sentimental": "^1.0.1"
+    "Sentimental": "^1.0.1",
+    "express": "^4.16.4"
   }
 }
