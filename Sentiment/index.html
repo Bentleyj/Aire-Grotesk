@@ -48,8 +48,8 @@
 	</head>
 	<body>
 		<input id="source" />
-		<p id="sentiment">Test</p>
-		<p id="result">EXPLODE!</p>
+		<p id="sentiment">Sentiment Score: </p>
+		<p id="result"></p>
 		<script>
 
 			const $source = document.querySelector('#source');
@@ -83,7 +83,7 @@
 				var text = $result.innerHTML;
 				var t = {textToAnalyze: text};
 				$.post("http://localhost:8080/submit", t, function(res) {
-					sentiment.innerHTML = res;
+					sentiment.innerHTML = "Sentiment Score: " + res;
 					var v = res;
 					goodnessTar = map(v, 0, 4, 0, 1000); // attribute for happiness
 					badnessTar = map(v, 0, -4, 0, 1000); // attribute for sadness
