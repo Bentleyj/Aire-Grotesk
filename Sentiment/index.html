@@ -33,7 +33,7 @@
 		@font-face {
 		  font-family:'Decovar Alpha Regular24';      
 		  src:url('https://www.axis-praxis.org/fonts/webfonts/DecovarAlpha-VF.woff2');
-		  font-variation-settings: "BLDA" 0, "TRMD" 0, "TRMC" 0, "SKLD" 0, "TRML" 0, "SKLA" 0, "TRMF" 0, "TRMK" 0, "BLDB" 0, "WMX2" 0, "TRMB" 0, "TRMA" 0, "SKLB" 0, "TRMG" 0, "TRME" 0;
+		  font-variation-settings: "BLDA" 0, "TRMD" 0, "TRMC" 0, "SKLD" 0, "TRML" 0, "SKLA" 0, "TRMF" 0, "TRMK" 0, "BLDB" 0, "WMX2" 0, "TRMB" 0, "TRMA" 0, "SKLB" 0, "TRMG" 0, "TRME" 1000;
 		}
 
 
@@ -50,11 +50,19 @@
 	</head>
 	<body>
 		<input id="source" />
-		<button id="submit" type="button">Click Me!</button>
+		<button id="submit" type="button">Analyze</button>
 		<p id="result">EXPLODE!</p>
 		<p id="sentiment">Test</p>
 		<span id="value"><span>
 		<script>
+
+			function map(val, min1, max1, min2, max2) {
+				var v = val - min1;
+				v = v / (max1 - min1);
+				v = v * (max2 - min2);
+				v = min2 + v;
+				return v;
+			}
 
 			const $source = document.querySelector('#source');
 			const $result = document.querySelector('#result');
@@ -63,13 +71,20 @@
 
 			const typeHandler = function(e) {
 				$result.innerHTML = e.target.value;
+				findSentiment();
 			}
 
-			const findSentiment = function(e) {
+			const findSentiment = function() {
 				var text = $result.innerHTML;
 				var t = {textToAnalyze: text};
 				$.post("http://localhost:8080/submit", t, function(res) {
-						sentiment.innerHTML = res;
+					sentiment.innerHTML = res;
+					var v = res;
+					var skld = map(v, 0, 4, 0, 200); // attribute for happiness
+					var skla = map(v, 0, -4, 0, 200); // attribute for sadness
+			   		var settings = "font-variation-settings: 'SKLD' " + skld + ", 'BLDB' " + skla + ";" ;
+					result.setAttribute("style", ('font-variation-settings', settings));
+
 				});
 			}
 
@@ -77,6 +92,8 @@
 			$source.addEventListener('propertychange', typeHandler);
 			$source.addEventListener('change', typeHandler);
 			$button.addEventListener('click', findSentiment);
+
+
 		</script>
 	</body>
 </html>
