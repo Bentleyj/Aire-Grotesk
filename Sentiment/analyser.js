@@ -9,11 +9,11 @@ app.get('/', function(req, res) {
 	res.sendFile(path.join(__dirname+'/index.html'));
 });
 
-app.use(express.static('libs'));
+app.use(express.static('libs')); // This serves everything in the libs file as static files. You access them by going directly to them without prepending the /libs/ file path.
 
 app.use(myParser.urlencoded({extended : true}));
 
-app.post('/submit', function(req, res) {
+app.post('localhost:8080/submit', function(req, res) {
 	console.log("Submitted: \n" + req.body);
 });
 
