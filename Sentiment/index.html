@@ -48,59 +48,21 @@
 		</style>
 	</head>
 	<body>
-		<canvas id="meter" width="900" height="150"></canvas>
-		<p id="para1">EXPLODE!</p>
+		<input id="source" />
+		<p id="result">EXPLODE!</p>
 		<span id="value"><span>
 		<script>
-			var text = document.getElementById("para1");
-			var value = document.getElementById("value");
 
-			var audioContext = null;
-			var meter = null;
-			var canvasContext = null;
-			var WIDTH=900;
-			var HEIGHT=150;
-			var rafID = null;
+			const $source = document.querySelector('#source');
+			const $result = document.querySelector('#result');
 
-			window.onload = function() {
-
-			    // grab our canvas
-				canvasContext = document.getElementById( "meter" ).getContext("2d");
+			const typeHandler = function(e) {
+				$result.innerHTML = e.target.value;
 			}
 
-			// function onLevelChange( time ) {
-			//     // clear the background
-
-			//     // check if we're currently clipping
-			//     if (meter.checkClipping())
-			//         canvasContext.fillStyle = "red";
-			//     else
-			//         canvasContext.fillStyle = "green";
-
-			 
-
-			//     // draw a bar based on the current volume
-			  
-			//  if (meter.volume > 0) {    
-			//     var newVol = 0 + meter.volume * 500;
-			//     var volLength = meter.volume * 900 * 3;
-			//      //var volSize = 150 + meter.volume * 300;
-			//     console.log(volLength);
-			//     var skld = newVol * 10;
-			//    	var skla = newVol * 10;
-			//    	var wmx2 = newVol * 10;
-			//    	var settings = "font-variation-settings: 'SKLD' " + skld + ", 'BLDB' " + skla + ", 'WMX2' " + wmx2 + ";" ;
-			// 	text.setAttribute("style", ('font-variation-settings', settings));
-			//     //text.style.fontSize = volSize + "px";
-			//    value.innerHTML = Math.round((0 + meter.volume * 100)) + "%";
-			    
-			//     canvasContext.fillRect(0, 0, volLength, HEIGHT);
-			//  }   
-
-			//     // set up the next visual callback
-			//     rafID = window.requestAnimationFrame( onLevelChange );
-			// }
-
+			$source.addEventListener('input', typeHandler);
+			$source.addEventListener('propertychance', typeHandler);
+			$source.addEventListener('change', typeHandler);
 		</script>
 	</body>
 </html>

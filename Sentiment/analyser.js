@@ -14,6 +14,6 @@ app.get('/submit', function(req, res) {
 
 app.listen(8080);
 
-var a = analyze("Hey you worthless scumbag"); //Score: -6, Comparative:-1.5
+var a = analyze("This is a fun app"); //Score: -6, Comparative:-1.5
 
 console.log(a);
