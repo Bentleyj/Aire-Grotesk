@@ -14,13 +14,11 @@ app.use(express.static('libs')); // This serves everything in the libs file as s
 app.use(myParser.urlencoded({extended : true}));
 
 app.post('/submit', function(req, res) {
-	var a = req.body;
-	console.log(a);
+	var t = req.body.textToAnalyze;
+	var a = analyze(t);
+	var s = a.score.toString()
+	res.end(s);
 });
 
 
 app.listen(8080);
-
-var a = analyze("This is a fun app"); //Score: -6, Comparative:-1.5
-
-console.log(a);

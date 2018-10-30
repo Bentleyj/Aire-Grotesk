@@ -50,6 +50,7 @@
 	</head>
 	<body>
 		<input id="source" />
+		<button id="submit" type="button">Click Me!</button>
 		<p id="result">EXPLODE!</p>
 		<p id="sentiment">Test</p>
 		<span id="value"><span>
@@ -58,18 +59,24 @@
 			const $source = document.querySelector('#source');
 			const $result = document.querySelector('#result');
 			const $sentiment = document.querySelector('#sentiment');
+			const $button = document.querySelector('#submit');
 
 			const typeHandler = function(e) {
 				$result.innerHTML = e.target.value;
-				console.log(e);
-				$.post("http://localhost:8080/submit", e.target.value, function(result) {
-					sentiment.innerHTML = result;
+			}
+
+			const findSentiment = function(e) {
+				var text = $result.innerHTML;
+				var t = {textToAnalyze: text};
+				$.post("http://localhost:8080/submit", t, function(res) {
+						sentiment.innerHTML = res;
 				});
 			}
 
 			$source.addEventListener('input', typeHandler);
 			$source.addEventListener('propertychange', typeHandler);
 			$source.addEventListener('change', typeHandler);
+			$button.addEventListener('click', findSentiment);
 		</script>
 	</body>
 </html>
