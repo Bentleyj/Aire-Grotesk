@@ -4,7 +4,7 @@ This is a project in association with [Studio Atypical](http://studioatypical.co
 
 Inspired by [Axis Praxis](https://www.axis-praxis.org/specimens/__DEFAULT__)
 
-to run download the app and run the command `npm install` then to view our project go to the lcoal server: 8080
+to run download the app and run the command `npm install` then to view our project run `node sentiment.js` go to the `localhost:8080`.
 
 ### File Structure
 
@@ -16,6 +16,7 @@ This project is a set of experiments around interactive variable fonts in the br
 4. PitchDetect - Vary text parameters based on pitch (Status: Working but looks ugly).
 5. VolumeExplode - Make font explode via input volume, same as Mic Volume but controlling different parameters of a different font (Status: Working).
 6. WebMidi - Make font change on Midi input from a midi controller (Status: Untested).
+7. Sentiment - Uses a Node.js server to analyze the sentiment of the text input and modifying the font accordingly. using npm plugin [Sentimental](https://github.com/thinkroth/Sentimental)
 
 ### Useful Links
 
