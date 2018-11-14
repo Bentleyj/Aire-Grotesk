@@ -3,7 +3,6 @@ var express 		= require("express");
 var app 			= express();
 var path			= require("path");
 var myParser 		= require("body-parser");
-var speechToText 	= require("speech-to-text");
 
 app.get('/', function(req, res) {
 	res.sendFile(path.join(__dirname+'/index.html'));
