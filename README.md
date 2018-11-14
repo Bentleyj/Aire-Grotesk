@@ -17,6 +17,7 @@ This project is a set of experiments around interactive variable fonts in the br
 5. VolumeExplode - Make font explode via input volume, same as Mic Volume but controlling different parameters of a different font (Status: Working).
 6. WebMidi - Make font change on Midi input from a midi controller (Status: Untested).
 7. Sentiment - Uses a Node.js server to analyze the sentiment of the text input and modifying the font accordingly. using npm plugin [Sentimental](https://github.com/thinkroth/Sentimental)
+8. Speech To Text - Uses Node.js server to analize audio and convert it to written text using npm plugin [speech-to-text](https://www.npmjs.com/package/speech-to-text)
 
 ### Useful Links
 
@@ -26,3 +27,4 @@ This project is a set of experiments around interactive variable fonts in the br
   * https://github.com/thinkroth/Sentimental
   * https://github.com/soops/sentimood
   * https://pdfs.semanticscholar.org/5057/0b1ae743d853fb035a1b4863579f349a2591.pdf
+  * https://www.npmjs.com/package/speech-to-text
