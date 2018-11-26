@@ -30,8 +30,6 @@
 			  text-align: center;
 			}
 
-
-
 			@font-face {
 			  font-family:'Decovar Alpha Regular24';      
 			  src:url('https://www.axis-praxis.org/fonts/webfonts/DecovarAlpha-VF.woff2');
@@ -54,6 +52,39 @@
 		<span id="value"><span>
 		<script>
 			var midi, data;
+			var midiMap = {
+				name: 'My Object',
+				map: [
+						{ name:'BLDA', value: 0, min: 0, max: 1000 },
+						{ name:'TRMD', value: 0, min: 0, max: 1000 },
+						{ name:'TRMC', value: 0, min: 0, max: 1000 },
+						{ name:'SKLD', value: 0, min: 0, max: 1000 },
+						{ name:'TRML', value: 0, min: 0, max: 1000 },
+						{ name:'SKLA', value: 0, min: 0, max: 1000 },
+						{ name:'TRMF', value: 0, min: 0, max: 1000 },
+						{ name:'BLDB', value: 0, min: 0, max: 1000 },
+						{ name:'WMX2', value: 0, min: 0, max: 1000 },
+						{ name:'TRMB', value: 0, min: 0, max: 1000 },
+						{ name:'TRMA', value: 0, min: 0, max: 1000 },
+						{ name:'SKLB', value: 0, min: 0, max: 1000 },
+						{ name:'TRMG', value: 0, min: 0, max: 1000 },
+						{ name:'TRME', value: 0, min: 0, max: 1000 }
+					],
+				getSettingsString: function() {
+					var s = "font-variation-settings: ";
+					for(var i = 0; i < 14; i++) {
+						s += " '";
+						s += this.map[i].name;
+						s += "' ";
+						s += this.map[i].value;
+						if(i === 13)
+							s += ";";
+						else
+							s += ", ";
+					}
+					return s;
+				}
+			}
 			// start talking to MIDI controller
 			if (navigator.requestMIDIAccess) {
 			  navigator.requestMIDIAccess({
@@ -61,6 +92,10 @@
 			  }).then(onMIDISuccess, onMIDIFailure);
 			} else {
 			  console.warn("No MIDI support in your browser")
+			}
+
+			window.onload = function() {
+				console.log(midiMap.getSettingsString());
 			}
 
 			// on success
@@ -78,11 +113,14 @@
 
 			function gotMIDImessage(messageData) {
 			  var text = document.getElementById("para1");
-			  if (messageData.data[1] == 0) {
-			    var skld = messageData.data[2]*10;  
-			  }
+			  var slider = messageData.data[1];
+			  var amount = messageData.data[2] * 10;
+			  midiMap.map[slider].value = amount;
+			  // if (messageData.data[1] == 0) {
+			    // var skld = messageData.data[2]*10;  
+			  // }
 			  
-			    var settings = "font-variation-settings: 'SKLD' " + skld + ";" ;
+			    var settings = midiMap.getSettingsString();//"font-variation-settings: 'SKLD' " + skld + ";" ;
 			    text.setAttribute("style", ('font-variation-settings', settings));
 			}
 
