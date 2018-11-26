@@ -30,10 +30,10 @@ body {
     }
 
     .info {
-      font-size:3.75vw;
+      font-size:2vw;
       font-family: "Zeitung Pro Regular";
-      font-weight: 100;
-      margin: 100px;
+      margin: 7.5%;
+      font-weight: 50;
     }
 
       h1{
@@ -78,8 +78,8 @@ body {
   <div class="contents">
     <p class="info">FLICK THE SWITCH</p>
     <h1 id="title">I GET LIGHTER WHEN IT GETS DARKER</h1>
-    <p id="title">Current Light Levels</p>
-    <div id="details">217</div>  
+    <!--<p id="title">Current Light Levels</p>
+    <div id="details">217</div> --> 
   
   <script>
     // Rewrite this to work with the webcam.
@@ -100,7 +100,7 @@ body {
             text.style.fontWeight = newVol;
             document.body.style.color = "rgb(" + colorDark + "," + colorDark + "," + colorDark + ")";
             document.body.style.background = "rgb(" + colorBright + "," + colorBright + "," + colorBright + ")";
-            details.innerHTML = sensor.illuminance;
+            //details.innerHTML = sensor.illuminance;
             console.log(colorBright);
             
               // Read the light levels in lux 
