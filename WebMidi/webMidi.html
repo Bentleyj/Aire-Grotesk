@@ -79,7 +79,10 @@
 						s += this.map[i].name;
 						s += "' ";
 						s += this.map[i].value;
-						s += "; ";
+						if(i == 13)
+							s += ";";
+						else
+							s += ", ";
 					}
 					return s;
 				}
