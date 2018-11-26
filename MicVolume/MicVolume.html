@@ -58,6 +58,7 @@
 		var text = document.getElementById("para1");
 		var value = document.getElementById("value");
 		var vol = 0;
+		var recentVolumes = [200];
 
 		function createAudioMeter(audioContext,clipLevel,averaging,clipLag) {
 			var processor = audioContext.createScriptProcessor(512);
@@ -200,11 +201,19 @@
 		    // draw a bar based on the current volume
 		  
 		 if (meter.volume > 0) {    
-		    var newVol = 0 + meter.volume * 500;
-		    var volLength = meter.volume * 900 * 3;
+		    var newVol = meter.volume * 500;
+
+		    vol = lerp(vol, newVol, 0.1);
+
+		    recentVolumes.unshift(vol);
+		    if(recentVolumes.length > 50) {
+		    	recentVolumes.pop();
+		    }
+		    console.log(recentVolumes.length);
+
+		    var volLength = vol * 5.4;
 		     //var volSize = 150 + meter.volume * 300;
-		    console.log(volLength);
-		    text.style.fontWeight = newVol * 9;
+		    text.style.fontWeight = vol * 9;
 		    //text.style.fontSize = volSize + "px";
 		   value.innerHTML = Math.round((0 + meter.volume * 100)) + "%";
 		    
