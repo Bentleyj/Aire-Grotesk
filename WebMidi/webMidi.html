@@ -1,4 +1,4 @@
-<html>
+ <html>
 	<head>
 		<title>Web Midi</title>
 		<style>
@@ -55,29 +55,28 @@
 			var midiMap = {
 				name: 'My Object',
 				map: [
-						{ name:'BLDA', value: 0, min: 0, max: 1000 },
 						{ name:'TRMD', value: 0, min: 0, max: 1000 },
-						{ name:'TRMC', value: 0, min: 0, max: 1000 },
-						{ name:'SKLD', value: 0, min: 0, max: 1000 },
-						{ name:'TRML', value: 0, min: 0, max: 1000 },
-						{ name:'SKLA', value: 0, min: 0, max: 1000 },
-						{ name:'TRMF', value: 0, min: 0, max: 1000 },
-						{ name:'BLDB', value: 0, min: 0, max: 1000 },
-						{ name:'WMX2', value: 0, min: 0, max: 1000 },
-						{ name:'TRMB', value: 0, min: 0, max: 1000 },
 						{ name:'TRMA', value: 0, min: 0, max: 1000 },
-						{ name:'SKLB', value: 0, min: 0, max: 1000 },
+						{ name:'TRMC', value: 0, min: 0, max: 1000 },
+						{ name:'TRMB', value: 0, min: 0, max: 1000 },
+						{ name:'BLDA', value: 0, min: 0, max: 250 },
+						{ name:'SKLB', value: 0, min: 0, max: 300 },
 						{ name:'TRMG', value: 0, min: 0, max: 1000 },
-						{ name:'TRME', value: 0, min: 0, max: 1000 }
+						{ name:'TRME', value: 0, min: 0, max: 1000 },
+						{ name:'WMX2', value: 0, min: 0, max: 1000 },
+						{ name:'SKLD', value: 0, min: 0, max: 200 },
+						{ name:'TRML', value: 0, min: 0, max: 1000 },
+						{ name:'SKLA', value: 0, min: 0, max: 250 }
+						
 					],
 				getSettingsString: function() {
 					var s = "font-variation-settings: ";
-					for(var i = 0; i < 14; i++) {
+					for(var i = 0; i < 12; i++) {
 						s += " '";
 						s += this.map[i].name;
 						s += "' ";
 						s += this.map[i].value;
-						if(i === 13)
+						if(i === 11)
 							s += ";";
 						else
 							s += ", ";
