@@ -57,6 +57,7 @@
 		<script>
 		var text = document.getElementById("para1");
 		var value = document.getElementById("value");
+		var vol = 0;
 
 		function createAudioMeter(audioContext,clipLevel,averaging,clipLag) {
 			var processor = audioContext.createScriptProcessor(512);
@@ -176,6 +177,12 @@
 
 		    // kick off the visual updating
 		    onLevelChange();
+		}
+
+		function lerp(a, b, p) {
+			var dist = b - a;
+			var s = p * dist;
+			return a + s;
 		}
 
 		function onLevelChange( time ) {
