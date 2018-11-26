@@ -122,7 +122,7 @@
 			  var text = document.getElementById("para1");
 			  var slider = messageData.data[1];
 			  var amount = messageData.data[2];
-			  if(slider > 7) {
+			  if(slider > 7) { // The dials on our Midi controller are numbered from 16 so we need to re-scale them.
 			  	slider -= 8;
 			  }
 			  midiMap.map[slider].value = map(amount, 0, 127, midiMap.map[slider].min, midiMap.map[slider].max);
