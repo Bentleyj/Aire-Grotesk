@@ -98,6 +98,13 @@
 				console.log(midiMap.getSettingsString());
 			}
 
+			function map(v, min1, max1, min2, max2) {
+				var diff = max1 - min1;
+				var v0 = v - min1;
+				var p = v0 / diff;
+				return min2 + p *(max2 - min2);
+			}
+
 			// on success
 			function onMIDISuccess(midiData) {
 			  // this is all our MIDI data
@@ -114,8 +121,11 @@
 			function gotMIDImessage(messageData) {
 			  var text = document.getElementById("para1");
 			  var slider = messageData.data[1];
-			  var amount = messageData.data[2] * 10;
-			  midiMap.map[slider].value = amount;
+			  var amount = messageData.data[2];
+			  if(slider > 7) {
+			  	slider -= 8;
+			  }
+			  midiMap.map[slider].value = map(amount, 0, 127, midiMap.map[slider].min, midiMap.map[slider].max);
 			  // if (messageData.data[1] == 0) {
 			    // var skld = messageData.data[2]*10;  
 			  // }
