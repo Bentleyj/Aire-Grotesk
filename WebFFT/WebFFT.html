@@ -1,0 +1,236 @@
+<html>
+	<head>
+		<title>WebFFT</title>
+		<style>
+		body {
+		  background-color: white;
+		  color: #eaeaea;
+		  margin: 0;
+		  padding: 1em;
+		  text-align: center;
+		}
+
+		#value {
+		  color: black;
+		  font-size: 60px;
+		}
+
+		#meter {
+		  margin-top:60px;
+		}
+
+
+		button {
+		  color: black;
+		  padding: 4px 16px;
+		}
+
+		.p {
+		  padding: 0;
+		  text-align: center;
+		}
+
+
+		@font-face {
+		  font-family:'Zeitung Pro Regular'; 
+		  src:url('https://www.axis-praxis.org/fonts/webfonts/ZeitungProBeta.woff2');
+		  font-stretch: 1% 500%;
+		  font-weight: 1 1000;
+		  font-stretch: 1% 500%;
+		}
+
+
+		#para1 {
+		  font-size:200px;
+		  color: black;
+		  font-family: "Zeitung Pro Regular";
+		  font-stretch: 500%;
+		  margin: 0;
+		}
+
+		</style>
+	</head>
+	<body>
+		<canvas id="meter" width="900" height="150"></canvas>
+		<p id="para1">VOLUME!</p>
+		<span id="value"><span>
+		<script>
+		var text = document.getElementById("para1");
+		var value = document.getElementById("value");
+
+		var audioContext = null;
+		var meter = null;
+		var canvasContext = null;
+		var WIDTH=900;
+		var HEIGHT=150;
+		var rafID = null;
+		var analyser = null;
+		var fftSize = 1024;
+		var dataBuffer = new Uint8Array(fftSize);
+
+		window.onload = function() {
+
+		    // grab our canvas
+			canvasContext = document.getElementById( "meter" ).getContext("2d");
+			
+		    // monkeypatch Web Audio
+		    window.AudioContext = window.AudioContext || window.webkitAudioContext;
+			
+		    // grab an audio context
+		    audioContext = new AudioContext();
+
+		    // create an AnalyzerNode object.
+		    analyser = audioContext.createAnalyser();
+
+		    // Attempt to get audio input
+		    try {
+		        // monkeypatch getUserMedia
+		        navigator.getUserMedia = 
+		        	navigator.getUserMedia ||
+		        	navigator.webkitGetUserMedia ||
+		        	navigator.mozGetUserMedia;
+
+		        // ask for an audio input
+		        navigator.getUserMedia(
+		        {
+		            "audio": {
+		                "mandatory": {
+		                    "googEchoCancellation": "false",
+		                    "googAutoGainControl": "false",
+		                    "googNoiseSuppression": "false",
+		                    "googHighpassFilter": "false"
+		                },
+		                "optional": []
+		            },
+		        }, onMicrophoneGranted, onMicrophoneDenied);
+		    } catch (e) {
+		        alert('getUserMedia threw exception :' + e);
+		    }
+
+		}
+
+		function onMicrophoneDenied() {
+		    alert('Stream generation failed.');
+		}
+
+		var mediaStreamSource = null;
+
+		function onMicrophoneGranted(stream) {
+		    // Create an AudioNode from the stream.
+		    mediaStreamSource = audioContext.createMediaStreamSource(stream);
+
+		  	analyser.fftSize = fftSize;
+
+		    mediaStreamSource.connect(analyser);
+
+		    // Create a new volume meter and connect it.
+
+		    // kick off the visual updating
+		    onLevelChange();
+		}
+
+		function map(val, inMin, inMax, outMin, outMax) {
+			var p = (val - inMin) / (inMax - inMin);
+			var v = outMin + (p * (outMax - outMin));
+			return v;
+		}
+
+		function volumeAudioProcess( event ) {
+			var buf = event.inputBuffer.getChannelData(0);
+		    var bufLength = buf.length;
+			var sum = 0;
+		    var x;
+
+			// Do a root-mean-square on the samples: sum up the squares...
+		    for (var i=0; i<bufLength; i++) {
+		    	x = buf[i];
+		    	if (Math.abs(x)>=this.clipLevel) {
+		    		this.clipping = true;
+		    		this.lastClip = window.performance.now();
+		    	}
+		    	sum += x * x;
+		    }
+
+		    // ... then take the square root of the sum.
+		    var rms =  Math.sqrt(sum / bufLength);
+
+		    // Now smooth this out with the averaging factor applied
+		    // to the previous sample - take the max here because we
+		    // want "fast attack, slow release."
+		    this.volume = Math.max(rms, this.volume*this.averaging);
+		}
+
+		function processDataBuffer(newBuffer) {
+			var length = fftSize;
+			for(var i = 0; i < length; i++) {
+				// if(newBuffer[i] > dataBuffer[i]) {
+					dataBuffer[i] = (newBuffer[i] + dataBuffer[i]) / 2.0;
+				// } else {
+				// 	dataBuffer[i] *= 0.9;
+				// }
+			}
+		}
+
+		function onLevelChange( time ) {
+
+		    var bufferLength = analyser.frequencyBinCount;
+
+		    var dataArray = new Uint8Array(bufferLength);
+
+		    analyser.getByteFrequencyData(dataArray);
+
+		    processDataBuffer(dataArray);
+
+		    // clear the background
+		    canvasContext.clearRect(0,0,WIDTH,HEIGHT);
+
+		    canvasContext.fillStyle = 'rgb(0, 0, 0)';
+		    canvasContext.fillRect(0, 0, WIDTH, HEIGHT);
+
+		    var barWidth = (WIDTH / bufferLength) * 2.5;
+		    var barHeight;
+		    var x = 0;
+
+		    for(var i = 0; i < bufferLength; i++) {
+		    	barHeight = map(dataBuffer[i], 100, 200, 0, HEIGHT);
+		    	canvasContext.fillStyle = 'rgb( 200,50,50)';
+		    	canvasContext.fillRect(x, HEIGHT-barHeight, barWidth, barHeight);
+		    	x += barWidth + 1;
+		    }
+
+		    barHeight = map(dataBuffer[3], 100, 200, 0, HEIGHT);
+
+
+		   	text.style.fontWeight = barHeight;
+
+
+		    // check if we're currently clipping
+		    // if (meter.checkClipping())
+		    //     canvasContext.fillStyle = "red";
+		    // else
+		    //     canvasContext.fillStyle = "green";
+
+		 
+
+		    // draw a bar based on the current volume
+		  
+		 // if (meter.volume > 0) {    
+		 //    var newVol = 0 + meter.volume * 500;
+		 //    var volLength = meter.volume * 900 * 3;
+		 //     //var volSize = 150 + meter.volume * 300;
+		 //    console.log(volLength);
+		 //    text.style.fontWeight = newVol * 9;
+		 //    //text.style.fontSize = volSize + "px";
+		 //   value.innerHTML = Math.round((0 + meter.volume * 100)) + "%";
+		    
+		 //    canvasContext.fillRect(0, 0, volLength, HEIGHT);
+		 // }   
+
+		    // set up the next visual callback
+		    rafID = window.requestAnimationFrame( onLevelChange );
+		}
+
+
+		</script>
+	</body>
+</html>

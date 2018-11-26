@@ -1,0 +1,95 @@
+<html>
+	<head>
+		<title>Web Midi</title>
+		<style>
+			body {
+			  background-color: white;
+			  color: #eaeaea;
+			  margin: 0;
+			  padding: 1em;
+			  text-align: center;
+			}
+
+			#value {
+			  color: white;
+			  font-size: 60px;
+			}
+
+			#meter {
+			  margin-top:60px;
+			}
+
+
+			button {
+			  color: black;
+			  padding: 4px 16px;
+			}
+
+			.p {
+			  padding: 0;
+			  text-align: center;
+			}
+
+
+
+			@font-face {
+			  font-family:'Decovar Alpha Regular24';      
+			  src:url('https://www.axis-praxis.org/fonts/webfonts/DecovarAlpha-VF.woff2');
+			}
+
+
+			#para1 {
+			  font-size:200px;
+			  color: black;
+			  font-family: "Decovar Alpha Regular24";
+			  font-variation-settings: "SKLD" 0, "SKLA" 0;
+			  font-stretch: 500%;
+			  margin: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="meter" width="900" height="150"></canvas>
+		<p id="para1">RESPONSIVE!</p>
+		<span id="value"><span>
+		<script>
+			var midi, data;
+			// start talking to MIDI controller
+			if (navigator.requestMIDIAccess) {
+			  navigator.requestMIDIAccess({
+			    sysex: false
+			  }).then(onMIDISuccess, onMIDIFailure);
+			} else {
+			  console.warn("No MIDI support in your browser")
+			}
+
+			// on success
+			function onMIDISuccess(midiData) {
+			  // this is all our MIDI data
+			  midi = midiData;
+			  var allInputs = midi.inputs.values();
+			  // loop over all available inputs and listen for any MIDI input
+			  for (var input = allInputs.next(); input && !input.done; input = allInputs.next()) {
+			    // when a MIDI value is received call the onMIDIMessage function
+			    input.value.onmidimessage = gotMIDImessage;
+			  }
+			}
+			var dataList = document.querySelector('#midi-data ul')
+
+			function gotMIDImessage(messageData) {
+			  var text = document.getElementById("para1");
+			  if (messageData.data[1] == 0) {
+			    var skld = messageData.data[2]*10;  
+			  }
+			  
+			    var settings = "font-variation-settings: 'SKLD' " + skld + ";" ;
+			    text.setAttribute("style", ('font-variation-settings', settings));
+			}
+
+			// on failure
+			function onMIDIFailure() {
+			  console.warn("Not recognising MIDI controller")
+			}
+		</script>
+	</body>
+</html>

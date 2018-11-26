@@ -1,0 +1,101 @@
+<html class="gr__deanhume_github_io"><head>
+    <meta charset="UTF-8">
+    <title>Ambient Light Sensor</title>
+    <link href="https://fonts.googleapis.com/css?family=Catamaran:700" rel="stylesheet">
+    <style>
+    @font-face {
+  font-family:'Zeitung Pro Regular'; 
+  src:url('https://www.axis-praxis.org/fonts/webfonts/ZeitungProBeta.woff2');
+  font-stretch: 1% 500%;
+  font-weight: 1 1000;
+  font-stretch: 1% 500%;
+}
+
+      h1{
+        font-size:200px;
+        max-width: 65%;
+        margin:0 auto;
+        font-family: "Zeitung Pro Regular";
+        font-stretch: 500%;
+      }
+      
+      p{
+        font-size: 40px;
+        font-family: "Zeitung Pro Regular";
+        margin: 10px; 
+      }
+      
+      #details{
+        font-size: 40px; 
+        font-family: "Zeitung Pro Regular";
+      }
+
+
+      
+      .darkLight{
+          font-family: 'Catamaran', sans-serif;
+          letter-spacing: -4px;
+          text-align: center;
+          color: #8cabd9;
+          background-color: #0a244d;
+
+        }
+
+       .brightLight{
+          font-family: 'Catamaran', sans-serif;
+          letter-spacing: -4px;
+          text-align: center;
+          background-color: #eef4f7;
+          color: #0a244d;
+        }
+    </style>
+  </head>
+  <body class="brightLight" data-gr-c-s-loaded="true">
+    <h1 id="title">I GET LIGHTER WHEN IT GETS DARKER</h1>
+    <p id="title">Current Light Levels</p>
+    <div id="details">217</div>  
+  
+  <script>
+    // Rewrite this to work with the webcam.
+    const details = document.getElementById("details");
+    
+    // Feature detection
+    if (window.AmbientLightSensor){
+        try{
+          const sensor = new AmbientLightSensor();
+
+          // Detect changes in the light
+          sensor.onreading = () => {
+            var text = document.getElementById("title");
+            var newVol = 0 + sensor.illuminance * 4;
+            var colorBright = 255 - sensor.illuminance;
+            var colorDark = sensor.illuminance;
+            document.body.style.fontWeight = newVol;
+            text.style.fontWeight = newVol;
+            document.body.style.color = "rgb(" + colorBright + "," + colorBright + "," + colorBright + ")";
+            document.body.style.background = "rgb(" + colorDark + "," + colorDark + "," + colorDark + ")";
+            details.innerHTML = sensor.illuminance;
+            console.log(colorBright);
+            
+              // Read the light levels in lux 
+              // < 50 is dark room
+              /*if (sensor.illuminance < 50) {
+                document.body.className = 'darkLight';
+              } else {
+                document.body.className = 'brightLight';
+              }*/
+          }
+          
+          // Has an error occured?
+          sensor.onerror = event => document.getElementById("details").innerHTML = event.error.message;
+          sensor.start();
+        } catch(err) {
+          details.innerHTML = err.message;
+        }
+    } else {
+      details.innerHTML = 'It looks like your browser doesnt support this feature'; 
+    }
+
+  </script>
+
+</body></html>

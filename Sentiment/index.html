@@ -1,0 +1,109 @@
+<html>
+	<head>
+		<title>Volume Explode</title>
+		<style>
+		body {
+		  background-color: white;
+		  color: black;
+		  margin: 0;
+		  padding: 1em;
+		  text-align: center;
+		}
+
+		#value {
+		  color: black;
+		  font-size: 60px;
+		}
+
+		#meter {
+		  margin-top:60px;
+		}
+
+		button {
+		  color: black;
+		  padding: 4px 16px;
+		}
+
+		.p {
+		  padding: 0;
+		  text-align: center;
+		}
+
+		@font-face {
+		  font-family:'Decovar Alpha Regular24';      
+		  src:url('https://www.axis-praxis.org/fonts/webfonts/DecovarAlpha-VF.woff2');
+		  font-variation-settings: "BLDA" 0, "TRMD" 0, "TRMC" 0, "SKLD" 0, "TRML" 0, "SKLA" 0, "TRMF" 0, "TRMK" 0, "BLDB" 0, "WMX2" 0, "TRMB" 0, "TRMA" 0, "SKLB" 0, "TRMG" 0, "TRME" 0;
+		}
+
+		#result {
+		  font-size:100px;
+		  color: black;
+		  font-family: "Decovar Alpha Regular24";
+		  font-variation-settings: "SKLD" 0, "SKLA" 0;
+		  font-stretch: 500%;
+		  margin: 0;
+		}
+		</style>
+		<script src="/jquery-3.3.1.min.js"></script>
+	</head>
+	<body>
+		<input id="source" />
+		<p id="sentiment">Sentiment Score: </p>
+		<p id="result"></p>
+		<script>
+
+			const $source = document.querySelector('#source');
+			const $result = document.querySelector('#result');
+			const $sentiment = document.querySelector('#sentiment');
+
+			var goodness = 0;
+			var badness = 0;
+
+			var goodnessTar = 0;
+			var badnessTar = 0;
+
+			function map(val, min1, max1, min2, max2) {
+				var v = val - min1;
+				v = v / (max1 - min1);
+				v = v * (max2 - min2);
+				v = min2 + v;
+				return v;
+			}
+
+			function lerp(a, b, v) {
+				return a + v * (b - a);
+			}
+
+			const typeHandler = function(e) {
+				$result.innerHTML = e.target.value;
+				findSentiment();
+			}
+
+			const findSentiment = function() {
+				var text = $result.innerHTML;
+				var t = {textToAnalyze: text};
+				$.post("http://localhost:8080/submit", t, function(res) {
+					sentiment.innerHTML = "Sentiment Score: " + res;
+					var v = res;
+					goodnessTar = map(v, 0, 4, 0, 1000); // attribute for happiness
+					badnessTar = map(v, 0, -4, 0, 1000); // attribute for sadness
+				});
+			}
+
+			function update(timestamp) {
+				goodness = lerp(goodness, goodnessTar, 0.1);
+				badness = lerp(badness, badnessTar, 0.1);
+				window.requestAnimationFrame(update);
+				var settings = "font-variation-settings: 'TRMC' " + goodness + ", 'BLDB' " + badness + ";" ;
+				result.setAttribute("style", ('font-variation-settings', settings));
+			}
+
+			window.requestAnimationFrame(update);
+
+			$source.addEventListener('input', typeHandler);
+			$source.addEventListener('propertychange', typeHandler);
+			$source.addEventListener('change', typeHandler);
+
+		</script>
+	</body>
+</html>
