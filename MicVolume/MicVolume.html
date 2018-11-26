@@ -223,12 +223,7 @@
 		 if (meter.volume > 0) {    
 		    var newVol = meter.volume * 500;
 
-		    recentVolumes.unshift(newVol);
-		    if(recentVolumes.length > 50) {
-		    	recentVolumes.pop();
-		    }
-
-		    vol = lerp(vol, newVol, 0.2);
+		    vol = lerp(vol, newVol, 0.1);
 
 		    var volLength = vol * 5.4;
 		    text.style.fontWeight = vol * 9;
