@@ -57,6 +57,7 @@
 		<script>
 		var text = document.getElementById("para1");
 		var value = document.getElementById("value");
+		var vol = 0;
 
 		function createAudioMeter(audioContext,clipLevel,averaging,clipLag) {
 			var processor = audioContext.createScriptProcessor(512);
@@ -178,6 +179,33 @@
 		    onLevelChange();
 		}
 
+		function lerp(a, b, p) {
+			var dist = b - a;
+			var s = p * dist;
+			return a + s;
+		}
+
+		function avg(a) {
+			var t = 0;
+			for(var i = 0; i < a.length; i++) {
+				t += a[i];
+			}
+			return t /= a.length;
+		}
+
+		function stdev(a) {
+			var avgA = avg(a);
+			var total = 0;
+			for(var i = 0; i < a.length; i++) {
+				var t = a[i] - avgA;
+				t = t*t;
+				total += t;
+			}
+			total /= a.length;
+			total = Math.sqrt(total);
+			return total;
+		}
+
 		function onLevelChange( time ) {
 		    // clear the background
 		    canvasContext.clearRect(0,0,WIDTH,HEIGHT);
@@ -193,13 +221,19 @@
 		    // draw a bar based on the current volume
 		  
 		 if (meter.volume > 0) {    
-		    var newVol = 0 + meter.volume * 500;
-		    var volLength = meter.volume * 900 * 3;
-		     //var volSize = 150 + meter.volume * 300;
-		    console.log(volLength);
-		    text.style.fontWeight = newVol * 9;
-		    //text.style.fontSize = volSize + "px";
-		   value.innerHTML = Math.round((0 + meter.volume * 100)) + "%";
+		    var newVol = meter.volume * 500;
+
+		    recentVolumes.unshift(newVol);
+		    if(recentVolumes.length > 50) {
+		    	recentVolumes.pop();
+		    }
+
+		    vol = lerp(vol, newVol, 0.2);
+
+		    var volLength = vol * 5.4;
+		    text.style.fontWeight = vol * 9;
+
+		   	value.innerHTML = Math.round((0 + meter.volume * 100)) + "%";
 		    
 		    canvasContext.fillRect(0, 0, volLength, HEIGHT);
 		 }   
