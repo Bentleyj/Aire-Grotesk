@@ -56,10 +56,19 @@
     <div id="details">217</div>  
   
   <script>
+
+    var luminance;
+
+    function map(v, min1, max1, min2, max2) {
+      var diff = max1 - min1;
+      var v0 = v - min1;
+      var p = v0 / diff;
+      return min2 + p *(max2 - min2);
+    }
+
     // Rewrite this to work with the webcam.
     const details = document.getElementById("details");
     
-    // Feature detection
     if (window.AmbientLightSensor){
         try{
           const sensor = new AmbientLightSensor();
@@ -67,14 +76,19 @@
           // Detect changes in the light
           sensor.onreading = () => {
             var text = document.getElementById("title");
+
             var newVol = 0 + sensor.illuminance * 4;
             var colorBright = 255 - sensor.illuminance;
             var colorDark = sensor.illuminance;
+
             document.body.style.fontWeight = newVol;
             text.style.fontWeight = newVol;
+
             document.body.style.color = "rgb(" + colorBright + "," + colorBright + "," + colorBright + ")";
             document.body.style.background = "rgb(" + colorDark + "," + colorDark + "," + colorDark + ")";
+
             details.innerHTML = sensor.illuminance;
+            
             console.log(colorBright);
             
               // Read the light levels in lux 
