@@ -82,21 +82,53 @@
 						{ name:'SKLD', value: 0, min: 0, max: 200 },
 						{ name:'TRML', value: 0, min: 0, max: 1000 },
 						{ name:'SKLA', value: 0, min: 0, max: 250 }
-						
 					],
+				red: { value: 255, min: 0, max: 255} ,
+				green: { value: 0, min: 0, max: 255},
+				blue: { value: 0, min: 0, max: 255},
+				weight: { value: 0, min: 0, max: 1000},
 				getSettingsString: function() {
 					var s = "font-variation-settings: ";
-					for(var i = 0; i < 12; i++) {
+					for(var i = 0; i < map.length; i++) {
 						s += " '";
 						s += this.map[i].name;
 						s += "' ";
 						s += this.map[i].value;
-						if(i === 11)
+						if(i === map.length-1)
 							s += ";";
 						else
 							s += ", ";
 					}
+					s += " color: rgb(" + this.red.value + ", " + this.green.value + ", " + this.blue.value + ");";
+					s += " font-weight: " + this.weight.value + ";";
 					return s;
+				},
+				getCorrectParameterForSliderIndex: function(i) {
+					if(i < 0) {
+						console.log("Error, you midi index is below 0, something has gone wrong");
+					} else if( i < 8) {
+						return i;
+					} if( i > 19) {
+						return i - 12;
+					} else {
+						return i - 4;
+					}
+				},
+				setCorrectSettingFromSlider: function(slider, amount) {
+					var slider = getCorrectParameterForSliderIndex(slider);
+					if(slider < 12) {
+		  				this.map[slider].value = map(amount, 0, 127, this.map[slider].min, this.map[slider].max);
+		  			} else {
+		  				if(slider === 12) {
+		  					this.red.value = map(amount, 0, 127, this.red.min, this.red.max);
+		  				} else if(slider === 13) {
+		  					this.green.value = map(amount, 0, 127, this.green.min, this.green.max);
+		  				} else if(slider === 14) {
+		  					this.blue.value = map(amount, 0, 127, this.blue.min, this.blue.max);
+		  				} else if(slider === 15) {
+		  					this.weight.value = map(amount, 0, 127, this.weight.min, this.weight.max);
+		  				}
+		  			}
 				}
 			}
 			// start talking to MIDI controller
@@ -136,14 +168,14 @@
 			  var text = document.getElementById("para1");
 			  var slider = messageData.data[1];
 			  var amount = messageData.data[2];
-			  if(slider > 7) { // The dials on our Midi controller are numbered from 16 so we need to re-scale them.
-			  	slider -= 8;
-			  }
-			  midiMap.map[slider].value = map(amount, 0, 127, midiMap.map[slider].min, midiMap.map[slider].max);
+
+			  midiMap.setCorrectSettingFromSlider(slider, amount);	
 			  
 			    var settings = midiMap.getSettingsString();//"font-variation-settings: 'SKLD' " + skld + ";" ;
-			    text.setAttribute("style", ('font-variation-settings', settings));
+			    text.setAttribute("style", (settings));
 			}
+			  var text = document.getElementById("para1");
+			// text.setAttribute("style", "font-size: 10")
 
 			// on failure
 			function onMIDIFailure() {
