@@ -126,9 +126,6 @@
 			  	slider -= 8;
 			  }
 			  midiMap.map[slider].value = map(amount, 0, 127, midiMap.map[slider].min, midiMap.map[slider].max);
-			  // if (messageData.data[1] == 0) {
-			    // var skld = messageData.data[2]*10;  
-			  // }
 			  
 			    var settings = midiMap.getSettingsString();//"font-variation-settings: 'SKLD' " + skld + ";" ;
 			    text.setAttribute("style", ('font-variation-settings', settings));
