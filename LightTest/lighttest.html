@@ -85,6 +85,8 @@
           sensor.onreading = () => {
             var text = document.getElementById("title");
 
+            console.log("On Reading called");
+
             luminance = lerp(luminance, sensor.illuminance, 0.1);
 
             var newWeight = map(luminance, 0, 255, 0, 1000);
