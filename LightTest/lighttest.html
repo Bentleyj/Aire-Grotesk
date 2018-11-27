@@ -82,34 +82,40 @@ body {
     <div id="details">217</div> --> 
   
   <script>
+
+    var luminance = 0;
+    var luminanceTarget = 0;
+    var minLuminance = 0;   // Modify this value based on luminance values in the actual installation.
+    var maxLuminance = 255; // Modify this value based on liminance values in the actual installation.
+    var text = document.getElementById("title");
+
+    function lerp(a, b, p) {
+      var dist = b - a;
+      var s = p * dist;
+      return a + s;
+    }
+
+    function map(v, min1, max1, min2, max2) {
+      var diff = max1 - min1;
+      var v0 = v - min1;
+      var p = v0 / diff;
+      return min2 + p *(max2 - min2);
+    }
+
     // Rewrite this to work with the webcam.
     const details = document.getElementById("details");
     
-    // Feature detection
     if (window.AmbientLightSensor){
         try{
           const sensor = new AmbientLightSensor();
 
+          console.log(sensor);
+
           // Detect changes in the light
           sensor.onreading = () => {
-            var text = document.getElementById("title");
-            var newVol = 0 + sensor.illuminance * 4;
-            var colorBright = 255 - 2*sensor.illuminance;
-            var colorDark = 2 * sensor.illuminance;
-            document.body.style.fontWeight = newVol;
-            text.style.fontWeight = newVol;
-            document.body.style.color = "rgb(" + colorDark + "," + colorDark + "," + colorDark + ")";
-            document.body.style.background = "rgb(" + colorBright + "," + colorBright + "," + colorBright + ")";
-            //details.innerHTML = sensor.illuminance;
-            console.log(colorBright);
-            
-              // Read the light levels in lux 
-              // < 50 is dark room
-              /*if (sensor.illuminance < 50) {
-                document.body.className = 'darkLight';
-              } else {
-                document.body.className = 'brightLight';
-              }*/
+            luminanceTarget = sensor.illuminance;
+
+            console.log(sensor.illuminance);
           }
           
           // Has an error occured?
@@ -121,6 +127,25 @@ body {
     } else {
       details.innerHTML = 'It looks like your browser doesnt support this feature'; 
     }
+
+    function animate() {
+      luminance = lerp(luminance, luminanceTarget, 0.1);
+      var newWeight = map(luminance, minLuminance, maxLuminance, 0, 1000);
+
+      var colorBright = map(luminance, minLuminance, maxLuminance, 0, 255);
+      var colorDark = 255 - map(luminance, minLuminance, maxLuminance, 0, 255);
+
+      document.body.style.fontWeight = newWeight;
+      text.style.fontWeight = newWeight;
+
+      document.body.style.color = "rgb(" + colorBright + "," + colorBright + "," + colorBright + ")";
+      document.body.style.background = "rgb(" + colorDark + "," + colorDark + "," + colorDark + ")";
+
+      details.innerHTML = luminance;
+      window.requestAnimationFrame(animate);
+    }
+
+    window.requestAnimationFrame(animate);
 
   </script>
       <p class="info">STUDIOATYPICAL.COM</p>
