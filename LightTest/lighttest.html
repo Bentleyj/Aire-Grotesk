@@ -88,7 +88,7 @@ body {
     var minLuminance = 0;   // Modify this value based on luminance values in the actual installation.
     var maxLuminance = 255; // Modify this value based on liminance values in the actual installation.
     var text = document.getElementById("title");
-
+        // Rewrite this to work with the webcam.
     function lerp(a, b, p) {
       var dist = b - a;
       var s = p * dist;
@@ -102,8 +102,7 @@ body {
       return min2 + p *(max2 - min2);
     }
 
-    // Rewrite this to work with the webcam.
-    const details = document.getElementById("details");
+
     
     if (window.AmbientLightSensor){
         try{
@@ -122,10 +121,10 @@ body {
           sensor.onerror = event => document.getElementById("details").innerHTML = event.error.message;
           sensor.start();
         } catch(err) {
-          details.innerHTML = err.message;
+          console.log(err);
         }
     } else {
-      details.innerHTML = 'It looks like your browser doesnt support this feature'; 
+      console.log("your browser does not support ambient light sensor")
     }
 
     function animate() {
@@ -141,7 +140,6 @@ body {
       document.body.style.color = "rgb(" + colorBright + "," + colorBright + "," + colorBright + ")";
       document.body.style.background = "rgb(" + colorDark + "," + colorDark + "," + colorDark + ")";
 
-      details.innerHTML = luminance;
       window.requestAnimationFrame(animate);
     }
 
