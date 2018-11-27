@@ -59,6 +59,12 @@
 
     var luminance;
 
+    function lerp(a, b, p) {
+      var dist = b - a;
+      var s = p * dist;
+      return a + s;
+    }
+
     function map(v, min1, max1, min2, max2) {
       var diff = max1 - min1;
       var v0 = v - min1;
@@ -77,18 +83,21 @@
           sensor.onreading = () => {
             var text = document.getElementById("title");
 
-            var newVol = 0 + sensor.illuminance * 4;
-            var colorBright = 255 - sensor.illuminance;
-            var colorDark = sensor.illuminance;
+            luminance = lerp(luminance, sensor.illuminance);
 
-            document.body.style.fontWeight = newVol;
-            text.style.fontWeight = newVol;
+            var newWeight = map(luminance, 0, 255, 0, 1000);
+
+            var colorBright = 255 - luminance;
+            var colorDark = luminance;
+
+            document.body.style.fontWeight = newWeight;
+            text.style.fontWeight = newWeight;
 
             document.body.style.color = "rgb(" + colorBright + "," + colorBright + "," + colorBright + ")";
             document.body.style.background = "rgb(" + colorDark + "," + colorDark + "," + colorDark + ")";
 
-            details.innerHTML = sensor.illuminance;
-            
+            details.innerHTML = luminance;
+
             console.log(colorBright);
             
               // Read the light levels in lux 
