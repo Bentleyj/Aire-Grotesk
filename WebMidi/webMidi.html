@@ -115,7 +115,7 @@
 					}
 				},
 				setCorrectSettingFromSlider: function(slider, amount) {
-					var slider = getCorrectParameterForSliderIndex(slider);
+					var slider = this.getCorrectParameterForSliderIndex(slider);
 					if(slider < 12) {
 		  				this.map[slider].value = map(amount, 0, 127, this.map[slider].min, this.map[slider].max);
 		  			} else {
