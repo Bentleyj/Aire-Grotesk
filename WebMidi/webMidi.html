@@ -83,9 +83,9 @@
 						{ name:'TRML', value: 0, min: 0, max: 1000 },
 						{ name:'SKLA', value: 0, min: 0, max: 250 }
 					],
-				red: { value: 255, min: 0, max: 255} ,
-				green: { value: 0, min: 0, max: 255},
-				blue: { value: 0, min: 0, max: 255},
+				red: { value: 255, min: 255, max: 0} ,
+				green: { value: 255, min: 255, max: 0},
+				blue: { value: 255, min: 255, max: 0},
 				weight: { value: 0, min: 0, max: 1000},
 				getSettingsString: function() {
 					var s = "font-variation-settings: ";
@@ -106,9 +106,9 @@
 				getCorrectParameterForSliderIndex: function(i) {
 					if(i < 0) {
 						console.log("Error, you midi index is below 0, something has gone wrong");
-					} else if( i < 8) {
+					} else if(i < 8) {
 						return i;
-					} if( i > 19) {
+					} if(i > 19) {
 						return i - 12;
 					} else {
 						return i - 4;
