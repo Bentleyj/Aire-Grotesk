@@ -1,23 +1,36 @@
-<html>
+ <html>
 	<head>
 		<title>Web Midi</title>
 		<style>
 			body {
-			  background-color: white;
-			  color: #eaeaea;
-			  margin: 0;
-			  padding: 1em;
-			  text-align: center;
+			   background-color: black;
+		  color: white;
+		  margin: 0;
+		  padding: 1em;
+		  text-align: center;
+		  width: 100%;
+    	  height: 100%;
+    	  padding: 0;
+    	  position: relative;
 			}
 
-			#value {
-			  color: white;
-			  font-size: 60px;
-			}
+			.contents {
+			position: absolute;
+  			top: 50%;
+  			left: 50%;
+  			transform: translate(-50%, -50%);
+		}
 
-			#meter {
-			  margin-top:60px;
-			}
+		.info {
+			font-size:2vw;
+		  	color: white;
+		  font-family: "Zeitung Pro Regular";
+		  font-weight: 50;
+		}
+
+		p {
+			margin-bottom: 7.5%;
+		}
 
 
 			button {
@@ -25,35 +38,99 @@
 			  padding: 4px 16px;
 			}
 
-			.p {
-			  padding: 0;
-			  text-align: center;
-			}
-
-
 
 			@font-face {
 			  font-family:'Decovar Alpha Regular24';      
 			  src:url('https://www.axis-praxis.org/fonts/webfonts/DecovarAlpha-VF.woff2');
 			}
 
+			@font-face {
+		  font-family:'Zeitung Pro Regular'; 
+		  src:url('https://www.axis-praxis.org/fonts/webfonts/ZeitungProBeta.woff2');
+		  font-stretch: 1% 500%;
+		  font-weight: 1 1000;
+		  font-stretch: 1% 500%;
+		}
+
 
 			#para1 {
-			  font-size:200px;
-			  color: black;
+			  font-size:15vw;
+			  color: white;
 			  font-family: "Decovar Alpha Regular24";
-			  font-variation-settings: "SKLD" 0, "SKLA" 0;
-			  font-stretch: 500%;
-			  margin: 0;
+			  margin-top:0;
+			  line-height: 1;
 			}
 		</style>
 	</head>
 	<body>
-		<canvas id="meter" width="900" height="150"></canvas>
-		<p id="para1">RESPONSIVE!</p>
-		<span id="value"><span>
+	<div class="contents">
+	<p class="info">REMIX THE FONT WITH THE SLIDERS AND DIALS</p>
+		<p id="para1">VARIABLE!</p>
 		<script>
 			var midi, data;
+			var midiMap = {
+				map: [
+						{ name:'TRMD', value: 0, min: 0, max: 1000 },
+						{ name:'TRMA', value: 0, min: 0, max: 1000 },
+						{ name:'TRMC', value: 0, min: 0, max: 1000 },
+						{ name:'TRMB', value: 0, min: 0, max: 1000 },
+						{ name:'BLDA', value: 0, min: 0, max: 250 },
+						{ name:'SKLB', value: 0, min: 0, max: 300 },
+						{ name:'TRMG', value: 0, min: 0, max: 1000 },
+						{ name:'TRME', value: 0, min: 0, max: 1000 },
+						{ name:'WMX2', value: 0, min: 0, max: 500 },
+						{ name:'SKLD', value: 0, min: 0, max: 200 },
+						{ name:'TRML', value: 0, min: 0, max: 1000 },
+						{ name:'SKLA', value: 0, min: 0, max: 250 }
+					],
+				red: { value: 255, min: 255, max: 0} ,
+				green: { value: 255, min: 255, max: 0},
+				blue: { value: 255, min: 255, max: 0},
+				weight: { value: 0, min: 0, max: 1000},
+				getSettingsString: function() {
+					var s = "font-variation-settings: ";
+					for(var i = 0; i < this.map.length; i++) {
+						s += " '";
+						s += this.map[i].name;
+						s += "' ";
+						s += this.map[i].value;
+						if(i === this.map.length-1)
+							s += ";";
+						else
+							s += ", ";
+					}
+					s += " color: rgb(" + this.red.value + ", " + this.green.value + ", " + this.blue.value + ");";
+					s += " font-weight: " + this.weight.value + ";";
+					return s;
+				},
+				getCorrectParameterForSliderIndex: function(i) {
+					if(i < 0) {
+						console.log("Error, you midi index is below 0, something has gone wrong");
+					} else if(i < 8) {
+						return i;
+					} if(i > 19) {
+						return i - 12;
+					} else {
+						return i - 4;
+					}
+				},
+				setCorrectSettingFromSlider: function(slider, amount) {
+					var slider = this.getCorrectParameterForSliderIndex(slider);
+					if(slider < 12) {
+		  				this.map[slider].value = map(amount, 0, 127, this.map[slider].min, this.map[slider].max);
+		  			} else {
+		  				if(slider === 12) {
+		  					this.red.value = map(amount, 0, 127, this.red.min, this.red.max);
+		  				} else if(slider === 13) {
+		  					this.green.value = map(amount, 0, 127, this.green.min, this.green.max);
+		  				} else if(slider === 14) {
+		  					this.blue.value = map(amount, 0, 127, this.blue.min, this.blue.max);
+		  				} else if(slider === 15) {
+		  					this.weight.value = map(amount, 0, 127, this.weight.min, this.weight.max);
+		  				}
+		  			}
+				}
+			}
 			// start talking to MIDI controller
 			if (navigator.requestMIDIAccess) {
 			  navigator.requestMIDIAccess({
@@ -61,6 +138,13 @@
 			  }).then(onMIDISuccess, onMIDIFailure);
 			} else {
 			  console.warn("No MIDI support in your browser")
+			}
+
+			function map(v, min1, max1, min2, max2) {
+				var diff = max1 - min1;
+				var v0 = v - min1;
+				var p = v0 / diff;
+				return min2 + p *(max2 - min2);
 			}
 
 			// on success
@@ -78,18 +162,22 @@
 
 			function gotMIDImessage(messageData) {
 			  var text = document.getElementById("para1");
-			  if (messageData.data[1] == 0) {
-			    var skld = messageData.data[2]*10;  
-			  }
-			  
-			    var settings = "font-variation-settings: 'SKLD' " + skld + ";" ;
-			    text.setAttribute("style", ('font-variation-settings', settings));
-			}
+			  var slider = messageData.data[1];
+			  var amount = messageData.data[2];
 
+			  midiMap.setCorrectSettingFromSlider(slider, amount);	
+			  
+			    var settings = midiMap.getSettingsString();//"font-variation-settings: 'SKLD' " + skld + ";" ;
+			    text.setAttribute("style", (settings));
+			}
+			  var text = document.getElementById("para1");
+			  
 			// on failure
 			function onMIDIFailure() {
 			  console.warn("Not recognising MIDI controller")
 			}
 		</script>
+		<p class="info">STUDIOATYPICAL.COM</p>
+		</div>
 	</body>
 </html>

@@ -11,9 +11,33 @@
   font-stretch: 1% 500%;
 }
 
+body {
+    
+      margin: 0;
+      padding: 1em;
+      text-align: center;
+      width: 100%;
+        height: 100%;
+        padding: 0;
+        position: relative;
+      }
+
+.contents {
+      position: absolute;
+        top: 50%;
+        left: 20%;
+        transform: translate(-10%, -50%);
+    }
+
+    .info {
+      font-size:2vw;
+      font-family: "Zeitung Pro Regular";
+      margin: 7.5%;
+      font-weight: 50;
+    }
+
       h1{
-        font-size:200px;
-        max-width: 65%;
+        font-size:7.5vw;
         margin:0 auto;
         font-family: "Zeitung Pro Regular";
         font-stretch: 500%;
@@ -51,9 +75,11 @@
     </style>
   </head>
   <body class="brightLight" data-gr-c-s-loaded="true">
+  <div class="contents">
+    <p class="info">FLICK THE SWITCH</p>
     <h1 id="title">I GET LIGHTER WHEN IT GETS DARKER</h1>
-    <p id="title">Current Light Levels</p>
-    <div id="details">217</div>  
+    <!--<p id="title">Current Light Levels</p>
+    <div id="details">217</div> --> 
   
   <script>
     // Rewrite this to work with the webcam.
@@ -68,13 +94,13 @@
           sensor.onreading = () => {
             var text = document.getElementById("title");
             var newVol = 0 + sensor.illuminance * 4;
-            var colorBright = 255 - sensor.illuminance;
-            var colorDark = sensor.illuminance;
+            var colorBright = 255 - 2*sensor.illuminance;
+            var colorDark = 2 * sensor.illuminance;
             document.body.style.fontWeight = newVol;
             text.style.fontWeight = newVol;
-            document.body.style.color = "rgb(" + colorBright + "," + colorBright + "," + colorBright + ")";
-            document.body.style.background = "rgb(" + colorDark + "," + colorDark + "," + colorDark + ")";
-            details.innerHTML = sensor.illuminance;
+            document.body.style.color = "rgb(" + colorDark + "," + colorDark + "," + colorDark + ")";
+            document.body.style.background = "rgb(" + colorBright + "," + colorBright + "," + colorBright + ")";
+            //details.innerHTML = sensor.illuminance;
             console.log(colorBright);
             
               // Read the light levels in lux 
@@ -97,5 +123,7 @@
     }
 
   </script>
+      <p class="info">STUDIOATYPICAL.COM</p>
+  </div>
 
 </body></html>
