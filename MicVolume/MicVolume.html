@@ -3,21 +3,33 @@
 		<title>Mic Volume</title>
 		<style>
 		body {
-		  background-color: white;
-		  color: #eaeaea;
+		  background-color: black;
+		  color: white;
 		  margin: 0;
 		  padding: 1em;
 		  text-align: center;
+		  width: 100%;
+    	  height: 100%;
+    	  padding: 0;
+    	  position: relative;
 		}
 
-		#value {
-		  color: black;
+		.contents {
+			position: absolute;
+  			top: 50%;
+  			left: 50%;
+  			transform: translate(-50%, -50%);
+		}
+
+		/*#value {
+		  color: white;
 		  font-size: 60px;
-		}
+		  font-family: "Zeitung Pro Regular";
+		}*/
 
-		#meter {
+		/*#meter {
 		  margin-top:60px;
-		}
+		}*/
 
 
 		button {
@@ -30,6 +42,13 @@
 		  text-align: center;
 		}
 
+		.info {
+      	font-size:2vw;
+      	font-family: "Zeitung Pro Regular";
+      	font-weight: 50;
+      	margin: 7.5%;
+    	}
+
 
 		@font-face {
 		  font-family:'Zeitung Pro Regular'; 
@@ -41,22 +60,25 @@
 
 
 		#para1 {
-		  font-size:200px;
-		  color: black;
+		  font-size: 15vw;
+		  color: white;
 		  font-family: "Zeitung Pro Regular";
 		  font-stretch: 500%;
 		  margin: 0;
+		  line-height: 1;
 		}
 
 		</style>
 	</head>
 	<body>
-		<canvas id="meter" width="900" height="150"></canvas>
+		<div class="contents">
+		<p class="info">TALK TO ME</p>
+		<!--<canvas id="meter" width="900" height="150"></canvas>-->
 		<p id="para1">VOLUME!</p>
-		<span id="value"><span>
+		<!--<span id="value"></span>-->
 		<script>
 		var text = document.getElementById("para1");
-		var value = document.getElementById("value");
+		//var value = document.getElementById("value");
 		var vol = 0;
 
 		function createAudioMeter(audioContext,clipLevel,averaging,clipLag) {
@@ -126,7 +148,7 @@
 		window.onload = function() {
 
 		    // grab our canvas
-			canvasContext = document.getElementById( "meter" ).getContext("2d");
+			//canvasContext = document.getElementById( "meter" ).getContext("2d");
 			
 		    // monkeypatch Web Audio
 		    window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -208,13 +230,13 @@
 
 		function onLevelChange( time ) {
 		    // clear the background
-		    canvasContext.clearRect(0,0,WIDTH,HEIGHT);
+		    //canvasContext.clearRect(0,0,WIDTH,HEIGHT);
 
 		    // check if we're currently clipping
-		    if (meter.checkClipping())
+		    /*if (meter.checkClipping())
 		        canvasContext.fillStyle = "red";
 		    else
-		        canvasContext.fillStyle = "green";
+		        canvasContext.fillStyle = "green";*/
 
 		 
 
@@ -228,9 +250,9 @@
 		    var volLength = vol * 5.4;
 		    text.style.fontWeight = vol * 9;
 
-		   	value.innerHTML = Math.round((0 + meter.volume * 100)) + "%";
+		   	//value.innerHTML = Math.round((0 + meter.volume * 100)) + "%";
 		    
-		    canvasContext.fillRect(0, 0, volLength, HEIGHT);
+		    //canvasContext.fillRect(0, 0, volLength, HEIGHT);
 		 }   
 
 		    // set up the next visual callback
@@ -239,5 +261,7 @@
 
 
 		</script>
+		<p class="info">STUDIOATYPICAL.COM</p>
+		</div>
 	</body>
 </html>
