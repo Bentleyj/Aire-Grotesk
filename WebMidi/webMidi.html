@@ -89,12 +89,12 @@
 				weight: { value: 0, min: 0, max: 1000},
 				getSettingsString: function() {
 					var s = "font-variation-settings: ";
-					for(var i = 0; i < map.length; i++) {
+					for(var i = 0; i < this.map.length; i++) {
 						s += " '";
 						s += this.map[i].name;
 						s += "' ";
 						s += this.map[i].value;
-						if(i === map.length-1)
+						if(i === this.map.length-1)
 							s += ";";
 						else
 							s += ", ";
@@ -140,10 +140,6 @@
 			  console.warn("No MIDI support in your browser")
 			}
 
-			window.onload = function() {
-				console.log(midiMap.getSettingsString());
-			}
-
 			function map(v, min1, max1, min2, max2) {
 				var diff = max1 - min1;
 				var v0 = v - min1;
@@ -175,8 +171,7 @@
 			    text.setAttribute("style", (settings));
 			}
 			  var text = document.getElementById("para1");
-			// text.setAttribute("style", "font-size: 10")
-
+			  
 			// on failure
 			function onMIDIFailure() {
 			  console.warn("Not recognising MIDI controller")
