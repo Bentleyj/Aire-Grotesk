@@ -58,6 +58,10 @@
   <script>
 
     var luminance = 0;
+    var luminanceTarget = 0;
+    var minLuminance = 0;   // Modify this value based on luminance values in the actual installation.
+    var maxLuminance = 255; // Modify this value based on liminance values in the actual installation.
+    var text = document.getElementById("title");
 
     function lerp(a, b, p) {
       var dist = b - a;
@@ -83,26 +87,10 @@
 
           // Detect changes in the light
           sensor.onreading = () => {
-            var text = document.getElementById("title");
 
-            console.log("On Reading called");
+            luminanceTarget = sensor.illuminance;
 
-            luminance = lerp(luminance, sensor.illuminance, 0.1);
-
-            var newWeight = map(luminance, 0, 255, 0, 1000);
-
-            var colorBright = 255 - luminance;
-            var colorDark = luminance;
-
-            document.body.style.fontWeight = newWeight;
-            text.style.fontWeight = newWeight;
-
-            document.body.style.color = "rgb(" + colorBright + "," + colorBright + "," + colorBright + ")";
-            document.body.style.background = "rgb(" + colorDark + "," + colorDark + "," + colorDark + ")";
-
-            details.innerHTML = luminance;
-
-            console.log(colorBright);
+            console.log(sensor.illuminance);
             
               // Read the light levels in lux 
               // < 50 is dark room
@@ -122,6 +110,25 @@
     } else {
       details.innerHTML = 'It looks like your browser doesnt support this feature'; 
     }
+
+    function animate() {
+      luminance = lerp(luminance, luminanceTarget, 0.1);
+      var newWeight = map(luminance, minLuminance, maxLuminance, 0, 1000);
+
+      var colorBright = 255 - map(luminance, minLuminance, maxLuminance, 0, 255);
+      var colorDark = map(luminance, minLuminance, maxLuminance, 0, 255);
+
+      document.body.style.fontWeight = newWeight;
+      text.style.fontWeight = newWeight;
+
+      document.body.style.color = "rgb(" + colorBright + "," + colorBright + "," + colorBright + ")";
+      document.body.style.background = "rgb(" + colorDark + "," + colorDark + "," + colorDark + ")";
+
+      details.innerHTML = luminance;
+      window.requestAnimationFrame(animate);
+    }
+
+    window.requestAnimationFrame(animate);
 
   </script>
 
