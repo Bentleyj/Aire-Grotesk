@@ -57,7 +57,7 @@
   
   <script>
 
-    var luminance;
+    var luminance = 0;
 
     function lerp(a, b, p) {
       var dist = b - a;
@@ -78,6 +78,8 @@
     if (window.AmbientLightSensor){
         try{
           const sensor = new AmbientLightSensor();
+
+          console.log(sensor);
 
           // Detect changes in the light
           sensor.onreading = () => {
