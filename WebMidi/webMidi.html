@@ -1,23 +1,36 @@
-<html>
+ <html>
 	<head>
 		<title>Web Midi</title>
 		<style>
 			body {
-			  background-color: white;
-			  color: #eaeaea;
-			  margin: 0;
-			  padding: 1em;
-			  text-align: center;
+			   background-color: black;
+		  color: white;
+		  margin: 0;
+		  padding: 1em;
+		  text-align: center;
+		  width: 100%;
+    	  height: 100%;
+    	  padding: 0;
+    	  position: relative;
 			}
 
-			#value {
-			  color: white;
-			  font-size: 60px;
-			}
+			.contents {
+			position: absolute;
+  			top: 50%;
+  			left: 50%;
+  			transform: translate(-50%, -50%);
+		}
 
-			#meter {
-			  margin-top:60px;
-			}
+		.info {
+			font-size:2vw;
+		  	color: white;
+		  font-family: "Zeitung Pro Regular";
+		  font-weight: 50;
+		}
+
+		p {
+			margin-bottom: 7.5%;
+		}
 
 
 			button {
@@ -25,59 +38,61 @@
 			  padding: 4px 16px;
 			}
 
-			.p {
-			  padding: 0;
-			  text-align: center;
-			}
 
 			@font-face {
 			  font-family:'Decovar Alpha Regular24';      
 			  src:url('https://www.axis-praxis.org/fonts/webfonts/DecovarAlpha-VF.woff2');
 			}
 
+			@font-face {
+		  font-family:'Zeitung Pro Regular'; 
+		  src:url('https://www.axis-praxis.org/fonts/webfonts/ZeitungProBeta.woff2');
+		  font-stretch: 1% 500%;
+		  font-weight: 1 1000;
+		  font-stretch: 1% 500%;
+		}
+
 
 			#para1 {
-			  font-size:200px;
-			  color: black;
+			  font-size:15vw;
+			  color: white;
 			  font-family: "Decovar Alpha Regular24";
-			  font-variation-settings: "SKLD" 0, "SKLA" 0;
-			  font-stretch: 500%;
-			  margin: 0;
+			  margin-top:0;
+			  line-height: 1;
 			}
 		</style>
 	</head>
 	<body>
-		<canvas id="meter" width="900" height="150"></canvas>
-		<p id="para1">RESPONSIVE!</p>
-		<span id="value"><span>
+	<div class="contents">
+	<p class="info">REMIX THE FONT WITH THE SLIDERS AND DIALS</p>
+		<p id="para1">VARIABLE!</p>
 		<script>
 			var midi, data;
 			var midiMap = {
 				name: 'My Object',
 				map: [
-						{ name:'BLDA', value: 0, min: 0, max: 1000 },
 						{ name:'TRMD', value: 0, min: 0, max: 1000 },
-						{ name:'TRMC', value: 0, min: 0, max: 1000 },
-						{ name:'SKLD', value: 0, min: 0, max: 1000 },
-						{ name:'TRML', value: 0, min: 0, max: 1000 },
-						{ name:'SKLA', value: 0, min: 0, max: 1000 },
-						{ name:'TRMF', value: 0, min: 0, max: 1000 },
-						{ name:'BLDB', value: 0, min: 0, max: 1000 },
-						{ name:'WMX2', value: 0, min: 0, max: 1000 },
-						{ name:'TRMB', value: 0, min: 0, max: 1000 },
 						{ name:'TRMA', value: 0, min: 0, max: 1000 },
-						{ name:'SKLB', value: 0, min: 0, max: 1000 },
+						{ name:'TRMC', value: 0, min: 0, max: 1000 },
+						{ name:'TRMB', value: 0, min: 0, max: 1000 },
+						{ name:'BLDA', value: 0, min: 0, max: 250 },
+						{ name:'SKLB', value: 0, min: 0, max: 300 },
 						{ name:'TRMG', value: 0, min: 0, max: 1000 },
-						{ name:'TRME', value: 0, min: 0, max: 1000 }
+						{ name:'TRME', value: 0, min: 0, max: 1000 },
+						{ name:'WMX2', value: 0, min: 0, max: 500 },
+						{ name:'SKLD', value: 0, min: 0, max: 200 },
+						{ name:'TRML', value: 0, min: 0, max: 1000 },
+						{ name:'SKLA', value: 0, min: 0, max: 250 }
+						
 					],
 				getSettingsString: function() {
 					var s = "font-variation-settings: ";
-					for(var i = 0; i < 14; i++) {
+					for(var i = 0; i < 12; i++) {
 						s += " '";
 						s += this.map[i].name;
 						s += "' ";
 						s += this.map[i].value;
-						if(i === 13)
+						if(i === 11)
 							s += ";";
 						else
 							s += ", ";
@@ -136,5 +151,7 @@
 			  console.warn("Not recognising MIDI controller")
 			}
 		</script>
+		<p class="info">STUDIOATYPICAL.COM</p>
+		</div>
 	</body>
 </html>
