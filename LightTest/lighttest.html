@@ -83,7 +83,7 @@
           sensor.onreading = () => {
             var text = document.getElementById("title");
 
-            luminance = lerp(luminance, sensor.illuminance);
+            luminance = lerp(luminance, sensor.illuminance, 0.1);
 
             var newWeight = map(luminance, 0, 255, 0, 1000);
 
