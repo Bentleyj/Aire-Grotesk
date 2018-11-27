@@ -107,8 +107,8 @@
       luminance = lerp(luminance, luminanceTarget, 0.1);
       var newWeight = map(luminance, minLuminance, maxLuminance, 0, 1000);
 
-      var colorBright = 255 - map(luminance, minLuminance, maxLuminance, 0, 255);
-      var colorDark = map(luminance, minLuminance, maxLuminance, 0, 255);
+      var colorBright = map(luminance, minLuminance, maxLuminance, 0, 255);
+      var colorDark = 255 - map(luminance, minLuminance, maxLuminance, 0, 255);
 
       document.body.style.fontWeight = newWeight;
       text.style.fontWeight = newWeight;
