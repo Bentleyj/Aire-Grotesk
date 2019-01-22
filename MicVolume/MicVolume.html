@@ -76,6 +76,9 @@
 		<!--<canvas id="meter" width="900" height="150"></canvas>-->
 		<p id="para1">VOLUME!</p>
 		<!--<span id="value"></span>-->
+		<div id="button_container">
+			<button id="button">Activate Audio</button>
+		</div>
 		<script>
 		var text = document.getElementById("para1");
 		//var value = document.getElementById("value");
@@ -183,6 +186,14 @@
 
 		}
 
+		// One-liner to resume playback when user interacted with the page.
+		document.querySelector('button').addEventListener('click', function() {
+		  audioContext.resume().then(() => {
+		    console.log('Playback resumed successfully');
+		  });
+		  document.getElementById('button_container').style.display = 'none'
+		});
+
 		function onMicrophoneDenied() {
 		    alert('Stream generation failed.');
 		}
@@ -258,7 +269,6 @@
 		    // set up the next visual callback
 		    rafID = window.requestAnimationFrame( onLevelChange );
 		}
-
 
 		</script>
 		<p class="info">STUDIOATYPICAL.COM</p>
