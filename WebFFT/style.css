@@ -1,0 +1,51 @@
+body {
+  background-color: white;
+  color: #eaeaea;
+  margin: 0;
+  padding: 1em;
+  text-align: center;
+}
+
+#value {
+  color: black;
+  font-size: 60px;
+}
+
+#meter {
+  margin-top:60px;
+}
+
+
+button {
+  color: black;
+  padding: 4px 16px;
+}
+
+span {
+  padding: 0;
+  text-align: center;
+  font-size:200px;
+  color: black;
+  font-family: "Noboto Flex";
+  font-stretch: 500%;
+  margin: 0;
+}
+
+@font-face {
+	font-family:'Noboto Flex'; 
+	src:url('https://www.axis-praxis.org/fonts/webfonts/NobotoFlex-VF.woff2');
+	font-variation-settings: "SCAL" 100, "BASE" 500, "SPAC" 100, "wght" 188.563, "OPTI" 31.9816, "HEIG" 338.898, "CAPS" 462.677, "CAPA" 420.056, "CAPB" 334.816, "ASCE" 730.22, "DESC" 675.867, "DIAC" 17.6389, "MONO" 100, "CURV" 0;
+}
+
+@font-face {
+  font-family:'Zeitung Pro Regular'; 
+  src:url('https://www.axis-praxis.org/fonts/webfonts/ZeitungProBeta.woff2');
+  font-stretch: 1% 500%;
+  font-weight: 1 1000;
+  font-stretch: 1% 500%;
+}
+
+
+.span1 {
+
+}
