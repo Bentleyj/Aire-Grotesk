@@ -6,73 +6,37 @@
 	<body>
 		<canvas id="meter" width="900" height="150"></canvas>
 		<p>
-			<span id="l0">A</span>
-			<span id="l1">T</span>
-			<span id="l2">Y</span>
-			<span id="l3">P</span>
-			<span id="l4">I</span>
-			<span id="l5">C</span>
-			<span id="l6">A</span>
-			<span id="l7">L</span>
-			<span id="l8"> </span>
+			<span id="l0">l</span>
+			<span id="l1">i</span>
+			<span id="l2">t</span>
+			<span id="l3">t</span>
+			<span id="l4">l</span>
+			<span id="l5">e</span>
+			<span id="l6">g</span>
+			<span id="l7">i</span>
+			<span id="l8">t</span>
 
 		<div id="button_container">
 			<button id="button">Activate Audio</button>
 		</div>
+		<script type="text/javascript" src="audio_setup.js"></script>
+		<script type="text/javascript" src="font_controls.js"></script>
+		<script type="text/javascript" src="util.js"></script>
 		<script>
-		var audioContext = null;
-		var meter = null;
-		var canvasContext = null;
-		var WIDTH=900;
-		var HEIGHT=150;
-		var rafID = null;
-		var analyser = null;
-		var fftSize = 1024 / 16;
-		var dataBuffer = new Uint8Array(fftSize);
-    	var mins = new Uint8Array(fftSize)
-    	var maxs = new Uint8Array(fftSize)
-	    mins.fill(Number.MAX_SAFE_INTEGER)
-	    maxs.fill(0)
+		var audioContext = null
+		var canvasContext = null
+		var rafID = null
+		var analyser = null
+		var fftSize = 1024 / 16
+		var fftHistoryLength = 120
+		var dataBuffer = new Uint8Array(fftSize)
+		var fftValues = createArray(fftSize, fftHistoryLength)
+		var mediaStreamSource = null;
 
 		window.onload = function() {
-
 		    // grab our canvas
-			canvasContext = document.getElementById( "meter" ).getContext("2d");
-			
-		    // monkeypatch Web Audio
-		    window.AudioContext = window.AudioContext || window.webkitAudioContext;
-			
-		    // grab an audio context
-		    audioContext = new AudioContext();
-
-		    // create an AnalyzerNode object.
-		    analyser = audioContext.createAnalyser();
-
-		    // Attempt to get audio input
-		    try {
-		        // monkeypatch getUserMedia
-		        navigator.getUserMedia = 
-		        	navigator.getUserMedia ||
-		        	navigator.webkitGetUserMedia ||
-		        	navigator.mozGetUserMedia;
-
-		        // ask for an audio input
-		        navigator.getUserMedia(
-		        {
-		            "audio": {
-		                "mandatory": {
-		                    "googEchoCancellation": "false",
-		                    "googAutoGainControl": "false",
-		                    "googNoiseSuppression": "false",
-		                    "googHighpassFilter": "false"
-		                },
-		                "optional": []
-		            },
-		        }, onMicrophoneGranted, onMicrophoneDenied);
-		    } catch (e) {
-		        alert('getUserMedia threw exception :' + e);
-		    }
-
+			canvasContext = document.getElementById( "meter" ).getContext("2d")
+			connectAudioDevice()
 		}
 
 		// One-liner to resume playback when user interacted with the page.
@@ -87,34 +51,16 @@
 		    alert('Stream generation failed.');
 		}
 
-		function setFontVariationSettings(text, scal, asce, desc, diac)
-		{
-		   	var settings = 	"font-variation-settings: 'SCAL' " + scal + ", 'BASE' 500, 'SPAC' 100, 'wght' 188.563, 'OPTI' 31.9816, 'HEIG' 338.898, 'CAPS' 462.677, 'CAPA' 420.056, 'CAPB' 334.816, 'ASCE' " + asce + ", 'DESC' " + desc + ", 'DIAC' " +  diac + " , 'MONO' 100, 'CURV' 0;"
-
-			text.setAttribute('style', ('font-variation-settings', settings));
-		}
-
-
-		var mediaStreamSource = null;
-
 		function onMicrophoneGranted(stream) {
 		    // Create an AudioNode from the stream.
 		    mediaStreamSource = audioContext.createMediaStreamSource(stream);
 
-		  	analyser.fftSize = fftSize;
+		    analyser.fftSize = fftSize;
 
 		    mediaStreamSource.connect(analyser);
 
-		    // Create a new volume meter and connect it.
-
 		    // kick off the visual updating
 		    onLevelChange();
-		}
-
-		function map(val, inMin, inMax, outMin, outMax) {
-			var p = (val - inMin) / (inMax - inMin);
-			var v = outMin + (p * (outMax - outMin));
-			return v;
 		}
 
 		function volumeAudioProcess( event ) {
@@ -142,43 +88,30 @@
 		    this.volume = Math.max(rms, this.volume*this.averaging);
 		}
 
-		function processDataBuffer(newBuffer) {
-			var length = fftSize;
-			for(var i = 0; i < length; i++) {
-				dataBuffer[i] = (newBuffer[i] + dataBuffer[i]) / 2.0;
-			}
-		}
+	    var mins = []
+	    var maxs = []
 
 		function onLevelChange( time ) {
-	    	var bufferLength = analyser.frequencyBinCount
+	    	var numFFTBins = analyser.frequencyBinCount
 
-		    var dataArray = new Uint8Array(bufferLength)
+		    var dataArray = new Uint8Array(numFFTBins)
 
 		    analyser.getByteFrequencyData(dataArray)
 
-		    processDataBuffer(dataArray)
+		    processDataBuffer(dataArray, numFFTBins)
 
-		    // clear the background
-		    canvasContext.clearRect(0,0,WIDTH,HEIGHT)
+		    renderDebugFFT(dataArray, numFFTBins, 900, 150)
 
-		    canvasContext.fillStyle = 'rgb(0, 0, 0)'
-		    canvasContext.fillRect(0, 0, WIDTH, HEIGHT)
-
-		    var barWidth = (WIDTH / bufferLength) * 2.5
-		    var x = 0
-
-		    for(var i = 0; i < bufferLength; i += 1) {
-		    	if (dataBuffer[i] < mins[i])
+		    for (var i = 0; i < numFFTBins; i++)
+		    {
+		    	var lastValue = fftValues[i][0]
+		    	updateQueue(dataBuffer[i], fftValues[i], 50)
+		    	mins[i] = getMin(fftValues[i])
+		    	maxs[i] = getMax(fftValues[i])
+		    	if (mins[i] == maxs[i])
 		    	{
-		    		mins[i] = dataBuffer[i]
+		    		mins[i] = maxs[i] - 1;
 		    	}
-		    	if (dataBuffer[i] > maxs[i])
-		    		maxs[i] = dataBuffer[i]
-
-		    	var barHeight = map(dataBuffer[i], 0, 250, 0, HEIGHT)
-		    	canvasContext.fillStyle = 'rgb( 200,50,50)'
-		    	canvasContext.fillRect(x, HEIGHT-barHeight, barWidth, barHeight)
-		    	x += barWidth + 1;
 		    }
 
 		    var numLetters = 9
@@ -188,13 +121,19 @@
 		   		var letter = document.getElementById(id.toString());
 		   		if (letter != null)
 		   		{
-		   			var index = i * bufferLength / numLetters
+		   			var index = i * numFFTBins / numLetters
 		   			index = Math.trunc(index)
-		   			var scal = 1 + map(dataBuffer[index], mins[index], maxs[index], 0, 100)
-		   			var asce = 500//1 + map(dataBuffer[index], mins[index], maxs[index], 0, 1000)
+		   			var scal = 20
+		   			var asce = map(dataBuffer[index], mins[index], maxs[index], 0, 1000)
 		   			var desc = asce
-		   			var diac = 16//1 + map(dataBuffer[index], mins[index], maxs[index], 0, 100)
+		   			var diac = map(dataBuffer[index], mins[index], maxs[index], 0, 100)
 			   		setFontVariationSettings(letter, scal, asce, desc, diac)
+			   		if (i === 0)
+			   		{
+			   			console.log(mins[index])
+			   			console.log(maxs[index])
+
+			   		}
 		   		}
 		    }
 
